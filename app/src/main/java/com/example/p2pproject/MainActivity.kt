@@ -11,7 +11,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
 
-
+    private val intentFilter = IntentFilter()
+    private lateinit var channel: WifiP2pManager.Channel
+    private lateinit var manager: WifiP2pManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +23,22 @@ class MainActivity : AppCompatActivity() {
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
+            // Indicates a change in the Wi-Fi P2P status.
+
+            intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION)
+
+            // Indicates a change in the list of available peers.
+            intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION)
+
+            // Indicates the state of Wi-Fi P2P connectivity has changed.
+            intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION)
+
+            // Indicates this device's details have changed.
+            intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION)
+
+            manager = getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager
+            channel = manager.initialize(this, mainLooper, null)
+
         }
     }
 
@@ -39,5 +57,9 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+
+
+
 
 }
